@@ -28,5 +28,4 @@ this.url = 'http://pull.sigequanwangluokeji.com/live/'+this.live_id+'.flv';
 
 这是需要在腾讯云配置拉流的地址，加上直播id，直接在video标签就可以拉到直播
 
-如果
 
