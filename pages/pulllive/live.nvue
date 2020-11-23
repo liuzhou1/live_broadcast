@@ -1,0 +1,69 @@
+<template>
+	<view>
+		<text v-if="mark" class="text" :style="{width : width + 'px'}">直播结束</text>
+		<button v-if="mark" @click="returns" class="but">返回</button>
+		<video v-if="!mark" @error="error" :src="url" style="width: 100vw;" :style="{height : height + 'px'}"
+		 :autoplay="true" :controls="false"></video>
+	</view>
+</template>
+<script>
+	export default {
+		data() {
+			return {
+				height:'',
+				width:'',
+				mark:false,
+				bottom:10,
+				live_id: 12,
+				url:'',
+
+			}
+		},
+		onLoad(option) {
+			this.url = 'http://pull.sigequanwangluokeji.com/live/'+this.live_id+'.flv';
+			console.log(this.url);
+			let res = uni.getSystemInfoSync()
+			this.height = res.windowHeight;
+			this.width = res.windowWidth;
+		},
+		methods:{
+			error(e){
+				if(e){
+					this.mark = false;
+				}
+			}
+
+		}
+	}
+</script>
+
+<style >
+	.mark{
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-direction: column;
+		background-color: #FFFFFF;
+	}
+	.mark-text{
+		padding-right: 75px;
+		font-size: 20px;
+		color: #333333;
+	}
+	.mark-texts{
+		line-height: 20px;
+		line-height: 10px;
+		font-size: 14px;
+		height: 50px;
+		width: 300px;
+		color: white;
+		background-color: #D4237A;
+	}
+	.text{
+		text-align: center;
+		padding-top: 400px;
+		padding-bottom: 50px;
+	}
+
+	
+</style>

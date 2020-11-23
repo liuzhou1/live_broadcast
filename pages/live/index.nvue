@@ -1,0 +1,365 @@
+<template>
+	<div>
+		<view>
+
+			<view class="arrow-boxs">
+				<image class="user-img" src="../../static/live-logo.png"></image>
+				<view class="jieshao">
+					<text class="id">账号：{{accountNum}} </text>
+				</view>
+			</view>
+			<view  @click="navback()"  class="arrow-box" >
+				<image class="tui-img" src="../../static/img/tuichu.png" ></image>
+			</view>
+
+			<live-pusher :beauty="beauty" :style="{width: width + 'px',height:height + 'px'}" id="livePusher" :url="url" mode="FHD"></live-pusher>
+
+			<!-- 这是功能按钮 -->
+			<view :style="{width: width + 'px'}" class="but" >
+				<view class="commodyti-box" :style="{width: width*0.3333 + 'px'}">
+					<view @click="openMark(0)" class="meiyanbut" >
+						<image class="but-img" src="../../static/img/zhiboshop2.png" style="height: 40rpx;"></image>
+					</view>
+				</view>
+				<view class="commodyti-box" :style="{width: width*0.3333 + 'px'}">
+					<view @click="openmeiyan" class="meiyanbut">
+						<image class="but-img" v-if="beauty==0" src="../../static/img/meiyan.png"></image>
+						<image class="but-img" v-else src="../../static/selecr-my.png"></image>
+					</view>
+				</view>
+				<view class="commodyti-box" :style="{width: width*0.3333 + 'px'}">
+					<view @click="switchCamera" class="meiyanbut">
+						<image class="but-img" v-if="!Camera" src="../../static/img/qiehuan.png"></image>
+						<image class="but-img" v-else src="../../static/select-chang.png"></image>
+					</view>
+				</view>
+			</view>
+		
+		</view>
+
+	</div>
+</template>
+
+<script>
+	import md5 from '@/js_sdk/ccdzhang-dokey/md5.js';
+	export default {
+		data() {
+			return {
+				type:"",
+				scrollTop:0,
+				Camera: true,
+				width: '',
+				height: '',
+				accountNum: '',
+				scrollTops:0,
+				url: '',//这是推流地址
+				live_id: 12, //这是推流id，用于生成推流地址，拉流能用到
+				context: null,
+				markact: true,
+				arr: [],
+				livegood:[],
+				beauty: 9,
+			};
+		},
+		onLoad() {
+			let res = uni.getSystemInfoSync()
+			this.width = res.windowWidth;
+			this.height = res.windowHeight;
+			this.accountNum = 'username';
+			let that = this;
+			
+		},
+
+		onReady() {
+			this.context = uni.createLivePusherContext('livePusher', this);
+			let that = this;
+			setTimeout(() => {
+				that.startLive(1);
+			}, 1500)
+		},
+		onUnload:function(){  
+
+		},
+		onHide:function(){
+           
+        },
+		onShow() {
+			this.context = uni.createLivePusherContext('livePusher', this);
+			var secretdate= '255307bc27858476a69230e35384e3c6';
+			let date = Date.parse(new Date())/1000 + 21600;
+			this.url = 'http://live.sigequanwangluokeji.com/live/'+this.live_id+'.flv?txSecret='+md5(secretdate+this.live_id+date.toString(16).toUpperCase())+'&txTime='+date.toString(16).toUpperCase();
+			setTimeout(() => {
+				this.startLive(0);
+			}, 1000)
+		},
+		methods: {
+			navback(){
+				uni.navigateBack();
+			},
+			zengMark(type){
+				this.$refs.popupr.close();
+				this.type = type;
+				this.$refs.popupr.open()
+			},
+			openmeiyan() {
+				// this.$refs.popup.open()
+				if (this.beauty == 0) {
+					this.beauty = 9
+				} else {
+					this.beauty = 0
+				}
+			},
+			startLive(type) {
+				let self = this;
+				this.context.start({
+					success: a => { 
+						console.log("livePusher.start:" + JSON.stringify(a));
+						self.markact = false;
+					},
+					fail: a =>{
+					}
+				});
+			},
+			stopLive() {
+				this.context.stop({
+					success: a => {}
+				});
+			},
+			switchCamera() {
+				this.context.switchCamera({
+					success: (a) => {
+						this.Camera = !this.Camera;
+						console.log("livePusher.switchCamera:" + JSON.stringify(a));
+					}
+				});
+			}
+		}
+	}
+</script>
+
+<style>
+
+
+	.shop-list-list{
+		position: relative;
+		margin-top: 25rpx;
+		padding-top: 10rpx;
+		padding-bottom: 10rpx;
+		display: flex;
+		align-items: flex-start;
+		flex-direction: row;
+		border-bottom: 1px solid #F7F7F7;
+	}
+
+	.shop-list-but-box{
+		position: absolute;
+		bottom: 26px;
+		right: 10px;
+		display: flex;
+		align-items: center;
+		justify-content: flex-end;
+		flex-direction: row;
+	}
+	.shop-list-but{
+		color: white;
+		border-radius: 20px;
+		font-size: 13px;
+		background-color: rgba(255,65,0,1);
+		padding: 10rpx 20rpx;
+		margin-right: 10px;
+	}
+	
+
+	.shop-list-img{
+		margin-right: 20rpx;
+		margin-left: 20rpx;
+		width: 150rpx;
+		height: 150rpx;
+	}
+	.shop-list-title{
+		font-size: 16px;
+		margin-bottom: 10rpx;
+		color:rgba(51,51,51,1);
+		/* color: #333333; */
+	}
+	.shop-list-price{
+		font-size: 16px;
+		color: #FF4100;
+		line-height: 30px;
+	}
+	.scroll-Ys{
+		background-color: #ffffff;
+		height: 650rpx;
+		width: 100%;
+	}
+	.scroll-Yss{
+		background-color: #ffffff;
+		height: 800rpx;
+		width: 100%;
+	}
+	.shop-list-box{
+		position: relative;
+		background-color: white;
+		width: 100%;
+		height: 380px;
+		border-radius:10px 10px 0 0;
+	}
+	.mark-title {
+		display: inline-flex;
+		height: 80rpx;
+		font-size: 20px;
+		align-items: flex-start;
+		justify-content: center;
+	}
+	.mark-tui {
+		/* position:relative; */
+		box-sizing: border-box;
+		height: 20rpx;
+		font-size: 20px;
+		display: table-cell;
+		line-height: 100rpx;
+		right: 0;
+		border-bottom: 1px solid #F7F7F7;
+	}
+	.fanhui {
+		width: 30rpx;
+		height: 30rpx;
+		margin-top: 40rpx;
+		text-align: center;
+		margin-right: 25rpx;
+	}
+	.zengjia {
+		width: 40rpx;
+		height: 40rpx;
+		margin-left: 30rpx;
+		margin-top: 34rpx;
+		margin-bottom: 10px;
+		display: inline-flex;
+	}
+	.add-shop{
+		font-size: 16px;
+		display: inline-flex;
+		color: #333333;
+		left: 20rpx;
+		z-index:10;
+		margin-left: 5px;
+	}
+
+	.meiyanbut {
+
+		height: 80rpx;
+		width: 80rpx;
+		display: flex;
+		flex-direction:row;
+		align-items: center;
+		justify-content: center;
+		border-radius: 50%;
+		background-color: rgba(0,0,0,0.2);
+		text-align: center;
+		
+	}
+	.but-img {
+		width: 38rpx;
+		height: 34rpx;
+	}
+	.id {
+		font-size: 14px;
+		color: white;
+	}
+
+	.text-box {
+		font-size: 12px;
+		color: white;
+	}
+
+	.mark-text {
+		color: white;
+		font-size: 20px;
+	}
+
+	.mark {
+		position: fixed;
+		top: 0px;
+		background-color: #9FA3A7;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		flex-direction: column;
+	}
+
+	.but {
+		position: fixed;
+		bottom: 0px;
+		display: flex;
+		flex-direction:row;
+		align-items: center;
+		justify-content: center;
+		height: 160rpx;
+	}
+	.commodyti-box{
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+
+	.tui {
+		width: 200px;
+		height: 200px;
+
+	}
+
+	.arrow-box {
+		position: fixed;
+		top: 80rpx;
+		right: 30rpx ;
+		z-index: 10;
+		border-radius: 50%;
+		box-sizing: border-box;
+		background-color: rgba(0,0,0,0.2);
+		height: 80rpx;
+		width: 80rpx;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+	}
+	.tui-img {
+		width: 36rpx;
+		height:36rpx;
+
+	}
+	.arrow-boxs {
+		padding: 1%;
+		display: flex;
+		align-items: center;
+		flex-direction: row;
+		position: fixed;
+		padding-right: 20rpx;
+		top: 80rpx;
+		left: 30rpx;
+		z-index: 10;
+		border-radius: 30px;
+		background-color: rgba(0, 0, 0, .2);
+		/* background-color: #FFFFFF; */
+	}
+	.user-img {
+		margin-right: 5px;
+		width: 35px;
+		height: 35px;
+		border-radius: 50%;
+	}
+	.jieshao {
+		display: flex;
+		flex-direction:column;
+	}
+	.jiesu {
+		padding: 10px 20px 10px 20px;
+		color: white;
+		font-size: 16px;
+	}
+
+	.arrow {
+		width: 15px;
+		height: 15px;
+	}
+	
+</style>
