@@ -52,7 +52,7 @@
 				height: '',
 				accountNum: '',
 				scrollTops:0,
-				url: '',//这是推流地址
+				url: '',
 				live_id: 12, //这是推流id，用于生成推流地址，拉流能用到
 				context: null,
 				markact: true,
@@ -85,8 +85,9 @@
         },
 		onShow() {
 			this.context = uni.createLivePusherContext('livePusher', this);
-			var secretdate= '255307bc27858476a69230e35384e3c6';
+			var secretdate= '********';   //这是需要在腾讯云获取直播的密钥
 			let date = Date.parse(new Date())/1000 + 21600;
+			 //这是需要在腾讯云配置推流的地址，这里采用的是flv的视频格式
 			this.url = 'http://live.sigequanwangluokeji.com/live/'+this.live_id+'.flv?txSecret='+md5(secretdate+this.live_id+date.toString(16).toUpperCase())+'&txTime='+date.toString(16).toUpperCase();
 			setTimeout(() => {
 				this.startLive(0);

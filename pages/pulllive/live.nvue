@@ -20,10 +20,11 @@
 			}
 		},
 		onLoad(option) {
+			 //这是需要在腾讯云配置拉流的地址，加上
 			this.url = 'http://pull.sigequanwangluokeji.com/live/'+this.live_id+'.flv';
 			console.log(this.url);
 			let res = uni.getSystemInfoSync()
-			this.height = res.windowHeight;
+			this.height = res.windowHeight;live_id
 			this.width = res.windowWidth;
 		},
 		methods:{
