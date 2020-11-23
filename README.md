@@ -1,8 +1,8 @@
-#商城 腾讯云直播
+# 商城 腾讯云直播
 
 推流需要打开 app模块权限配置的 LivePusher(直播推流)，不需要集成其他关于直播的的sdk
 
-###推流核心代码介绍
+### 推流核心代码介绍
 var secretdate= '********';   //这是需要在腾讯云获取直播的密钥
 
 let date = Date.parse(new Date())/1000 + 21600;  //当前时间六个小时后过期的十进制的时间戳（可自己设置过期时间）
@@ -22,7 +22,7 @@ this.url = 'http://live.sigequanwangluokeji.com/live/'+this.live_id+'.flv?txSecr
  直接通过LivePusher标签就可以推流成功
  
  
-###拉流核心代码介绍
+### 拉流核心代码介绍
 
 this.url = 'http://pull.sigequanwangluokeji.com/live/'+this.live_id+'.flv';
 
