@@ -41,7 +41,7 @@
 </template>
 
 <script>
-	import md5 from '@/js_sdk/ccdzhang-dokey/md5.js';
+	import md5 from '@/js_sdk/md5.js';
 	export default {
 		data() {
 			return {
@@ -58,7 +58,7 @@
 				markact: true,
 				arr: [],
 				livegood:[],
-				beauty: 9,
+				beauty: 9, //美颜等级
 			};
 		},
 		onLoad() {
@@ -87,6 +87,9 @@
 			this.context = uni.createLivePusherContext('livePusher', this);
 			var secretdate= '********';   //这是需要在腾讯云获取直播的密钥
 			let date = Date.parse(new Date())/1000 + 21600;
+			console.log(date)
+			console.log(date.toString(16))
+			console.log(date.toString(16).toUpperCase())
 			 //这是需要在腾讯云配置推流的地址，这里采用的是flv的视频格式
 			this.url = 'http://live.sigequanwangluokeji.com/live/'+this.live_id+'.flv?txSecret='+md5(secretdate+this.live_id+date.toString(16).toUpperCase())+'&txTime='+date.toString(16).toUpperCase();
 			setTimeout(() => {
